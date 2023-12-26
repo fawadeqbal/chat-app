@@ -3,19 +3,24 @@ import React, { useState } from "react";
 import tw from "twrnc";
 import { BGImage, Logo, colors } from "../../assets";
 import { UserTextInput } from "../components";
+import { useNavigation } from "@react-navigation/native";
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [getEmailValidationStatus, setGetEmailValidationStatus] = useState(false)
 
   const screenWidth = Math.round(Dimensions.get("window").width);
+  const navigation= useNavigation()
   return (
-   <ScrollView>
+   
       <View style={tw`flex-1 justify-start items-center`}>
         <Image
           style={tw`w-[${screenWidth}px] h-90`}
           source={BGImage}
           resizeMode="cover"
         />
+
+        {/* {main div} */}
         <View
           style={tw`w-full h-full bg-white rounded-tl-[90px] -mt-44 flex items-center justify-start py-6 px-6`}
         >
@@ -25,12 +30,13 @@ const Login = () => {
           >
             Welcome Back!
           </Text>
-          <View style={tw`w-full flex items-center justify-center`}>
+          <View style={tw`w-full flex items-center justify-center mt-20`}>
             <UserTextInput
               placeholder="Email"
               isPass={false}
               setStateValue={email}
               setStateFunction={setEmail}
+              setEmailValidationStatus= {setGetEmailValidationStatus}
             />
             <UserTextInput
               placeholder="Password"
@@ -45,13 +51,13 @@ const Login = () => {
                 Sign In
               </Text>
             </TouchableOpacity>
-            <View style={tw`w-full flex-row items-center justify-center gap-x-2`}>
+            <View style={tw`w-full flex-row items-center justify-center gap-x-2 mt-6`}>
               <Text
                 style={tw`text-base text-[${colors.primaryText}] font-semibold`}
               >
                 Don't have an account?
               </Text>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={()=> navigation.replace("Signup")}>
                 <Text
                   style={tw`text-base text-[${colors.primaryBold}] font-semibold`}
                 >
@@ -63,7 +69,6 @@ const Login = () => {
         </View>
       </View>
     
-      </ScrollView>
   );
 };
 
