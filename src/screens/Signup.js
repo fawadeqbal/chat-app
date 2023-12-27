@@ -44,7 +44,7 @@ const Signup = () => {
       <View
         style={tw`w-full h-full bg-white rounded-tl-[90px] -mt-44 flex items-center justify-start py-6 px-6`}
       >
-        <Image source={Logo} style={tw`w-16 h-16`} resizeMode="contained" />
+        <Image source={Logo} style={tw`w-16 h-16`} resizeMode="contain" />
         <Text
           style={tw`py-2 text-[${colors.primaryText}] text-xl font-semibold`}
         >
