@@ -5,21 +5,84 @@ import {
   View,
   ScrollView,
   ActivityIndicator,
-  TextInput
+  TextInput,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import tw from "twrnc";
-import { Entypo, FontAwesome, FontAwesome5, MaterialIcons } from "@expo/vector-icons";
+import {
+  Entypo,
+  FontAwesome,
+  FontAwesome5,
+  MaterialIcons,
+} from "@expo/vector-icons";
 import { TouchableOpacity } from "react-native";
 import { colors } from "../../assets";
-
+import {
+  addDoc,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  serverTimestamp,
+} from "firebase/firestore";
+import { auth, db } from "../config/firebase";
+import { AppContext } from "../context/AppContext";
 
 const Chat = ({ route, navigation }) => {
+  const { getUser } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const { room } = route.params;
-  console.log(room);
-    const [message, setMessage] = useState("")
-  
+  const [message, setMessage] = useState("");
+  const user = auth.currentUser;
+  const [currentUser, setCurrentUser] = useState(null);
+  const textInputRef = useRef();
+  const [messages, setMessages] = useState([]);
+  useEffect(() => {
+    getUserData();
+
+    const queryMsg = query(
+      collection(db, "chats", room?._id, "messages"),
+      orderBy("timestamp", "asc")
+    );
+
+    const unsubscribe = onSnapshot(queryMsg, (querySnap) => {
+      const upMsg = querySnap.docs.map((doc) => doc.data());
+      setMessages(upMsg);
+      setIsLoading(false);
+    });
+
+    return unsubscribe;
+  }, []);
+  const getUserData = async () => {
+    const res = await getUser(user.uid);
+
+    setCurrentUser(res);
+  };
+  const handleKeyboardOpen = () => {
+    if (textInputRef.current) {
+      textInputRef.current.focus();
+    }
+  };
+
+  const sendMessage = async () => {
+    const timestamp = serverTimestamp();
+    const id = `${Date.now()}`;
+    const _doc = {
+      _id: id,
+      roomId: room._id,
+      timestamp: timestamp,
+      message: message,
+      user: currentUser,
+    };
+    setMessage("")(
+      await addDoc(collection(doc(db, "chats", room._id), "messages"), _doc)
+    )
+      .then(() => {})
+      .catch((e) => {
+        console.log(e.message);
+      });
+  };
   return (
     <View style={tw`flex-1`}>
       <View style={tw`w-full bg-[${colors.primary}] px-4 py-6 flex-[0.2]`}>
@@ -63,11 +126,7 @@ const Chat = ({ route, navigation }) => {
               <FontAwesome name="phone" size={24} color={"#fbfbfb"} />
             </TouchableOpacity>
             <TouchableOpacity>
-              <Entypo
-                name="dots-three-vertical"
-                size={24}
-                color={"#fbfbfb"}
-              />
+              <Entypo name="dots-three-vertical" size={24} color={"#fbfbfb"} />
             </TouchableOpacity>
           </View>
         </View>
@@ -90,32 +149,53 @@ const Chat = ({ route, navigation }) => {
                   </View>
                 </>
               ) : (
-                <></>
+                <>
+                  {messages?.map((msg) =>
+                    msg.user.providerData.email ===
+                    auth.currentUser.providerData[0].email ? (
+                      <>
+                        <View style={tw`m-1`}>
+                          <View
+                            style={tw`px-4 py-2 rounded-tl-2xl rounded-bl-2xl bg-[${colors.primary}] w-auto relative`}
+                          >
+                            <Text style={tw`text-base font-semibold text-white`}>
+                              {msg.message}
+                           </Text>
+                          </View>
+                        </View>
+                      </>
+                    ) : (
+                      <></>
+                    )
+                  )}
+                </>
               )}
             </ScrollView>
-            <View style={tw`w-full flex-row items-center justify-center px-8 gap-x-2`}>
+            <View
+              style={tw`w-full flex-row items-center justify-center px-8 gap-x-2`}
+            >
               <View
                 style={tw`flex-row items-center justify-center px-4 bg-gray-200 rounded-2xl gap-x-4 py-2`}
               >
-                <TouchableOpacity >
-                    <Entypo name="emoji-happy" size={24} color={"#555"}/>
+                <TouchableOpacity onPress={handleKeyboardOpen}>
+                  <Entypo name="emoji-happy" size={24} color={"#555"} />
                 </TouchableOpacity>
-                <TextInput 
-                style={tw`flex-1 h-8 text-base text-primaryText font-semibold`}
-                placeholder="Type here..."
-                placeholderTextColor={"#999"}
-                value={message}
-                onChangeText={(text) => setMessage(text)}
+                <TextInput
+                  ref={textInputRef}
+                  style={tw`flex-1 h-8 text-base text-primaryText font-semibold`}
+                  placeholder="Type here..."
+                  placeholderTextColor={"#999"}
+                  value={message}
+                  onChangeText={(text) => setMessage(text)}
                 />
 
                 <TouchableOpacity>
-                    <Entypo name="mic" size={24} color={"#43c651"}/>
+                  <Entypo name="mic" size={24} color={"#43c651"} />
                 </TouchableOpacity>
-                
               </View>
-              <TouchableOpacity>
-                    <FontAwesome name="send" size={24} color={"#555"}/>
-                </TouchableOpacity>
+              <TouchableOpacity style={tw`pl-4`} onPress={sendMessage}>
+                <FontAwesome name="send" size={24} color={"#555"} />
+              </TouchableOpacity>
             </View>
           </>
         </KeyboardAvoidingView>

@@ -21,10 +21,16 @@
       "adaptiveIcon": {
         "foregroundImage": "",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.fawadeqbal.chatapp"
     },
     "web": {
       "favicon": ""
+    },
+    "extra": {
+      "eas": {
+        "projectId": "99221df3-48b6-4a65-8dbf-3093bc7cf011"
+      }
     }
   }
 }

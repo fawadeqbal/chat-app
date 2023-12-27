@@ -19,7 +19,6 @@ const AppNavigator = () => {
           <Stack.Screen name="Signup" component={Signup} />
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="AddToChat" component={AddToChat} />
-
           <Stack.Screen name="Chat" component={Chat} />
         </Stack.Navigator>
       </AppContextProvider>
