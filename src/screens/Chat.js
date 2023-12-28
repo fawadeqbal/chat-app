@@ -28,6 +28,8 @@ import {
 } from "firebase/firestore";
 import { auth, db } from "../config/firebase";
 import { AppContext } from "../context/AppContext";
+import { avatars } from "../../utils/supports";
+import { Image } from "react-native";
 
 const Chat = ({ route, navigation }) => {
   const { currentUser } = useContext(AppContext);
@@ -148,6 +150,7 @@ const Chat = ({ route, navigation }) => {
                       <>
                         <View style={tw`m-1`}>
                           <View
+                           
                             style={tw`self-end px-4 py-2 rounded-tl-2xl bg-[${colors.primary}] rounded-bl-2xl w-auto relative`}
                           >
                             <Text
@@ -156,12 +159,63 @@ const Chat = ({ route, navigation }) => {
                               {msg.message}
                             </Text>
                           </View>
+                          <View style={tw`self-end`}>
+                            {msg?.timestamp?.seconds && (
+                              <Text>
+                                {new Date(
+                                  parseInt(msg?.timestamp?.seconds) * 1000
+                                ).toLocaleTimeString("en-US", {
+                                  hour: "numeric",
+                                  minute: "numeric",
+                                  hour12: true,
+                                })}
+                              </Text>
+                            )}
+                          </View>
                         </View>
                       </>
                     ) : (
                       <>
-                        <View>
-                          
+                        <View
+                      
+                          style={tw`self-start flex items-center justify-start gap-x-2`}
+                        >
+                          <View
+                            style={tw`flex-row items-center justify-center gap-x-2`}
+                          >
+                            {/* image */}
+                            <Image
+                              style={tw`w-12 h-12 rounded-full`}
+                              resizeMode="cover"
+                              source={{ uri: avatars[0].image.asset.url }}
+                            />
+
+                            {/* text */}
+                            <View style={tw`m-1`}>
+                              <View
+                                style={tw`px-4 py-2 rounded-tl-2xl bg-[${colors.primary}] rounded-bl-2xl w-auto relative`}
+                              >
+                                <Text
+                                  style={tw`text-base font-semibold text-white`}
+                                >
+                                  {msg.message}
+                                </Text>
+                              </View>
+                              <View style={tw`self-start`}>
+                                {msg?.timestamp?.seconds && (
+                                  <Text>
+                                    {new Date(
+                                      parseInt(msg?.timestamp?.seconds) * 1000
+                                    ).toLocaleTimeString("en-US", {
+                                      hour: "numeric",
+                                      minute: "numeric",
+                                      hour12: true,
+                                    })}
+                                  </Text>
+                                )}
+                              </View>
+                            </View>
+                          </View>
                         </View>
                       </>
                     )
