@@ -23,11 +23,7 @@ const Home = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   const [chats,setChats]=useState([])
-  const handleSignout = async () => {
-    await signOut(auth);
-    setCurrentUser(null);
-    navigation.navigate("Login");
-  };
+  
   useLayoutEffect(()=>{
     const chatQuery= query(collection(db,"chats"),orderBy("_id","desc"))
     const unsubscribe= onSnapshot((chatQuery),(querySnapshot)=>{
@@ -46,7 +42,7 @@ const Home = () => {
         >
           <Image source={Logo} style={tw`w-12 h-12`} resizeMode="contain" />
           <TouchableOpacity
-            onPress={handleSignout}
+            onPress={()=> navigation.navigate("Profile")}
             style={tw`w-12 h-12 rounded-full border border-[${colors.primary}] flex items-center justify-center`}
           >
             <Image source={{uri:avatars[0].image.asset.url}} style={tw`w-full h-full rounded-full`} resizeMode="cover" />

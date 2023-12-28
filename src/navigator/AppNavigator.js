@@ -1,7 +1,7 @@
 import React from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { Home, Login, Signup, Splash, Chat, AddToChat } from "../screens";
+import { Home, Login, Signup, Splash, Chat, AddToChat, Profile } from "../screens";
 
 const Stack = createNativeStackNavigator();
 import AppContextProvider from "../context/AppContext";
@@ -20,6 +20,7 @@ const AppNavigator = () => {
           <Stack.Screen name="Splash" component={Splash} />
           <Stack.Screen name="AddToChat" component={AddToChat} />
           <Stack.Screen name="Chat" component={Chat} />
+          <Stack.Screen name="Profile" component={Profile} />
         </Stack.Navigator>
       </AppContextProvider>
     </NavigationContainer>

@@ -193,10 +193,10 @@ const Chat = ({ route, navigation }) => {
                             {/* text */}
                             <View style={tw`m-1`}>
                               <View
-                                style={tw`px-4 py-2 rounded-tl-2xl bg-[${colors.primary}] rounded-bl-2xl w-auto relative`}
+                                style={tw`px-4 py-2 rounded-tl-2xl bg-gray-200 rounded-bl-2xl w-auto relative`}
                               >
                                 <Text
-                                  style={tw`text-base font-semibold text-white`}
+                                  style={tw`text-base font-semibold text-black`}
                                 >
                                   {msg.message}
                                 </Text>
