@@ -28,11 +28,7 @@ const AppContextProvider = ({ children }) => {
     );
   };
 
-  const login = async (email,password)=>{
-    const res=await signInWithEmailAndPassword(auth,email,password)
-    return res;
-  }
-
+ 
   const getUser = async (uuid)=>{
     const docSnap=await getDoc(doc(db,"users",uuid))
     setCurrentUser(docSnap.data())
@@ -41,7 +37,6 @@ const AppContextProvider = ({ children }) => {
   
   const store = {
     signUp,
-    login,
     getUser,
     currentUser,
     setCurrentUser

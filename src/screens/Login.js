@@ -12,8 +12,10 @@ import { BGImage, Logo, colors } from "../../assets";
 import { UserTextInput } from "../components";
 import { useNavigation } from "@react-navigation/native";
 import { AppContext } from "../context/AppContext";
+import { auth } from "../config/firebase";
+import {signInWithEmailAndPassword} from 'firebase/auth'
 const Login = () => {
-  const { login, getUser } = useContext(AppContext);
+  const { getUser } = useContext(AppContext);
   const [email, setEmail] = useState("fawad12@yahoo.com");
   const [password, setPassword] = useState("qwertyui");
   const [getEmailValidationStatus, setGetEmailValidationStatus] =
@@ -23,11 +25,11 @@ const Login = () => {
   const navigation = useNavigation();
 
   const handleLogin = async () => {
-    if (getEmailValidationStatus ) {
-      const res = await login(email, password);
+    const res=await signInWithEmailAndPassword(auth,email,password)
+    console.log(res.user)
       await getUser(res.user.uid);
       navigation.replace("Home");
-    }
+   
   };
   return (
     <View style={tw`flex-1 justify-start items-center`}>
@@ -53,7 +55,6 @@ const Login = () => {
             isPass={false}
             setStateValue={email}
             setStateFunction={setEmail}
-            setGetEmailValidationStatus={setGetEmailValidationStatus}
           />
           <UserTextInput
             placeholder="Password"

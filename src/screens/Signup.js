@@ -20,11 +20,9 @@ const Signup = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [avatar, setAvatar] = useState(avatars[0].image.asset.url);
-  const [getEmailValidationStatus, setGetEmailValidationStatus] =
-    useState(false);
   const {signUp} =useContext(AppContext)
   const handleSignup = async () => {
-    if (getEmailValidationStatus && email !== "") {
+    if (email !== "") {
      await signUp(fullName,email,password)
     }
   };
@@ -78,8 +76,7 @@ const Signup = () => {
             isPass={false}
             setStateValue={email}
             setStateFunction={setEmail}
-            setGetEmailValidationStatus={setGetEmailValidationStatus}
-          />
+            />
           <UserTextInput
             placeholder="Password"
             isPass={true}

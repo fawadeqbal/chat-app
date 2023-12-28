@@ -8,7 +8,7 @@ const UserTextInput = ({
   isPass,
   setStateValue,
   setStateFunction,
-  setGetEmailValidationStatus,
+  // setGetEmailValidationStatus,
 }) => {
   const [showPass, setShowPass] = useState(true);
   const [icon, setIcon] = useState(null);
@@ -22,7 +22,7 @@ const UserTextInput = ({
     if(placeholder === 'Email'){
       const emailRegex =  /^[^\s@]+@[^\s@]+\.[^\s@]+$/ 
       const status= emailRegex.test(value)
-      setGetEmailValidationStatus(status)
+      // setGetEmailValidationStatus(status)
       setIsEmailValid(status)
     }
   }
@@ -39,7 +39,7 @@ const UserTextInput = ({
   }, []);
   return (
     <View
-      style={tw`border rounded-2xl px-4 py-6 flex-row items-center justify-between my-2 ${!isEmailValid && placeholder == "Email" && value.length>0? "border-red-200":"border-gray-200"} gap-x-3`}
+      style={tw`border rounded-2xl px-4 py-6 flex-row items-center justify-between my-2 w-100 ${!isEmailValid && placeholder == "Email" && value.length>0? "border-red-200":"border-gray-200"} gap-x-3`}
     >
       <MaterialIcons name={icon} size={24} color={"#6c6d83"} />
       <TextInput

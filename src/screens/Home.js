@@ -16,6 +16,7 @@ import { AppContext } from "../context/AppContext";
 import { Logo, colors } from "../../assets";
 import { ScrollView } from "react-native";
 import { FontAwesome5, Ionicons } from "@expo/vector-icons";
+import { avatars } from "../../utils/supports";
 const Home = () => {
   const { currentUser, setCurrentUser } = useContext(AppContext);
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ const Home = () => {
   },[])
 
   return (
-    <View style={tw`flex-1`}>
+    <View style={tw`flex-1 pt-7`}>
       <SafeAreaView>
         <View
           style={tw`w-full flex-row items-center justify-between px-4 py-2`}
@@ -48,7 +49,7 @@ const Home = () => {
             onPress={handleSignout}
             style={tw`w-12 h-12 rounded-full border border-[${colors.primary}] flex items-center justify-center`}
           >
-            <Image source={Logo} style={tw`w-full h-full`} resizeMode="cover" />
+            <Image source={{uri:avatars[0].image.asset.url}} style={tw`w-full h-full rounded-full`} resizeMode="cover" />
           </TouchableOpacity>
         </View>
 

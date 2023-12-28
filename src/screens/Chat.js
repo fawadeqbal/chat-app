@@ -30,17 +30,14 @@ import { auth, db } from "../config/firebase";
 import { AppContext } from "../context/AppContext";
 
 const Chat = ({ route, navigation }) => {
-  const { getUser } = useContext(AppContext);
+  const { currentUser } = useContext(AppContext);
   const [isLoading, setIsLoading] = useState(true);
   const { room } = route.params;
   const [message, setMessage] = useState("");
   const user = auth.currentUser;
-  const [currentUser, setCurrentUser] = useState(null);
   const textInputRef = useRef();
   const [messages, setMessages] = useState([]);
   useEffect(() => {
-    getUserData();
-
     const queryMsg = query(
       collection(db, "chats", room?._id, "messages"),
       orderBy("timestamp", "asc")
@@ -54,11 +51,7 @@ const Chat = ({ route, navigation }) => {
 
     return unsubscribe;
   }, []);
-  const getUserData = async () => {
-    const res = await getUser(user.uid);
 
-    setCurrentUser(res);
-  };
   const handleKeyboardOpen = () => {
     if (textInputRef.current) {
       textInputRef.current.focus();
@@ -75,9 +68,8 @@ const Chat = ({ route, navigation }) => {
       message: message,
       user: currentUser,
     };
-    setMessage("")(
-      await addDoc(collection(doc(db, "chats", room._id), "messages"), _doc)
-    )
+    setMessage("");
+    await addDoc(collection(doc(db, "chats", room._id), "messages"), _doc)
       .then(() => {})
       .catch((e) => {
         console.log(e.message);
@@ -95,7 +87,7 @@ const Chat = ({ route, navigation }) => {
           </TouchableOpacity>
 
           {/* middle */}
-          <View style={tw`flex-row items-center justify-center space-x-3`}>
+          <View style={tw`flex-row items-center justify-center gap-x-3`}>
             <View
               style={tw`w-12 h-12 rounded-full border-white border flex items-center justify-center`}
             >
@@ -156,16 +148,22 @@ const Chat = ({ route, navigation }) => {
                       <>
                         <View style={tw`m-1`}>
                           <View
-                            style={tw`px-4 py-2 rounded-tl-2xl rounded-bl-2xl bg-[${colors.primary}] w-auto relative`}
+                            style={tw`self-end px-4 py-2 rounded-tl-2xl bg-[${colors.primary}] rounded-bl-2xl w-auto relative`}
                           >
-                            <Text style={tw`text-base font-semibold text-white`}>
+                            <Text
+                              style={tw`text-base font-semibold text-white`}
+                            >
                               {msg.message}
-                           </Text>
+                            </Text>
                           </View>
                         </View>
                       </>
                     ) : (
-                      <></>
+                      <>
+                        <View>
+                          
+                        </View>
+                      </>
                     )
                   )}
                 </>
@@ -182,7 +180,7 @@ const Chat = ({ route, navigation }) => {
                 </TouchableOpacity>
                 <TextInput
                   ref={textInputRef}
-                  style={tw`flex-1 h-8 text-base text-primaryText font-semibold`}
+                  style={tw`flex-1 h-8 text-base text-[${colors.primaryText}] font-semibold`}
                   placeholder="Type here..."
                   placeholderTextColor={"#999"}
                   value={message}
